@@ -6,10 +6,20 @@ resource "aws_vpc" "MyVPC" {
   }
 }
 
+####### DATA SOURCE FOR AVAILABILITY ZONES ###########
+data "aws_availability_zone" "first_availability_zone" {
+  name = "us-east-1a"
+}
+
+data "aws_availability_zone" "second_availability_zone" {
+  name = "us-east-1b"
+}
+
+
 ##### AWS Subnets
 resource "aws_subnet" "public-subnet" {
   cidr_block        = var.public_subnet_cidr_block
-  availability_zone = "us-east-1a"
+  availability_zone = data.aws_availability_zone.first_availability_zone.id
   vpc_id            = aws_vpc.MyVPC.id
   tags = {
     "Name" = "PublicSubnet"
@@ -19,7 +29,7 @@ resource "aws_subnet" "public-subnet" {
 ##### AWS Subnets
 resource "aws_subnet" "private-subnet" {
   cidr_block        = var.private_subnet_cidr_block
-  availability_zone = "us-east-1a"
+  availability_zone = data.aws_availability_zone.first_availability_zone.id
   vpc_id            = aws_vpc.MyVPC.id
   tags = {
     "Name" = "PrivateSubnet"
@@ -75,7 +85,7 @@ resource "aws_route_table" "PublicRouteTable" {
 
 ## Route Table ASS
 resource "aws_route_table_association" "PublicRouteTable_ASS" {
- route_table_id = aws_route_table.PublicRouteTable.id
- subnet_id = aws_subnet.public-subnet.id
+  route_table_id = aws_route_table.PublicRouteTable.id
+  subnet_id      = aws_subnet.public-subnet.id
 }
 
