@@ -1,10 +1,11 @@
 ##### EC2 Launch in the Public Subnet
 module "EC2" {
-  source        = "../child/EC2"
-  subnet_id     = module.VPC.public_subnet_id
-  sg_ids        = [module.VPC.sg_id]
-  instance_type = "t2.micro"
-  public_ip_ass = true
+  source            = "../child/EC2"
+  subnet_id         = module.VPC.public_subnet_id
+  private_subnet_id = module.VPC.private_subnet_id
+  sg_ids            = [module.VPC.sg_id]
+  instance_type     = "t2.micro"
+  public_ip_ass     = true
 }
 
 module "VPC" {

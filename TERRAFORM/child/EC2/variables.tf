@@ -16,3 +16,8 @@ variable "public_ip_ass" {
 variable "sg_ids" {
   type = list(any)
 }
+
+variable "private_subnet_id" {
+  type    = string
+  default = ""
+}
